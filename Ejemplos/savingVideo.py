@@ -1,4 +1,4 @@
-# Guarda los vídeos 
+# Guarda los vídeos
 
 import numpy as np
 import cv2
