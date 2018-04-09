@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
-cap = cv2.VideoCapture('muerte.mp4')
+cap = cv2.VideoCapture(-1)
+#cap = cv2.VideoCapture('muerte.mp4')
 #cap = cv2.VideoCapture('hielo.mp4')
 #cap = cv2.VideoCapture('paz.mp4')
 #cap = cv2.VideoCapture('soldado.mp4')

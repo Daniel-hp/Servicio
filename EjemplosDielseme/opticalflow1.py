@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 
+cap = cv2.VideoCapture(-1)
 #cap = cv2.VideoCapture('muerte.mp4')
 #cap = cv2.VideoCapture('hielo.mp4')
 #cap = cv2.VideoCapture('paz.mp4')
@@ -29,11 +30,14 @@ p0 = cv2.goodFeaturesToTrack(old_gray, mask = None, **feature_params)
 
 # Create a mask image for drawing purposes
 mask = np.zeros_like(old_frame)
-
+fgbg = cv2.createBackgroundSubtractorMOG2()
 while(1):
     ret,frame = cap.read()
-    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    print(frame.shape)
+    #frame = fgbg.apply(frame)
+    print(frame.shape)
     # calculate optical flow
     p1, st, err = cv2.calcOpticalFlowPyrLK(old_gray, frame_gray, p0, None, **lk_params)
 
@@ -47,8 +51,8 @@ while(1):
         c,d = old.ravel()
         mask = cv2.line(mask, (a,b),(c,d), color[i].tolist(), 2)
         frame = cv2.circle(frame,(a,b),5,color[i].tolist(),-1)
-    img = cv2.add(frame,mask)
 
+    img = cv2.add(frame,mask)
     cv2.imshow('frame',img)
     k = cv2.waitKey(30) & 0xff
     if k == 27:

@@ -1,0 +1,20 @@
+https://gist.github.com/myfavouritekk/2cee1ec99b74e962f816
+
+http://interspecifics.cc/comunicacionesespeculativas/2017/08/11/tutorial-estudio-del-movimiento-con-optical-flow/
+
+Lo que se tiene que hacer es calcular el flujo óptico de la imagen que está 
+
+
+
+Ver forma de una matriz
+ver cómo extrar los puros renglones, columnas y esas cosas
+comandos como reshape, flatten ravel
+
+
+aplicar máscaras en opencv
+
+
+Ver cómo lee las imágenes opencv y cómo representarla en formatos bonitos
+
+
+https://stackoverflow.com/questions/45692765/opencv-example-error-typeerror-nonetype-object-is-not-subscriptable

@@ -6,6 +6,7 @@ import cv2
 #cap = cv2.VideoCapture('soldado.mp4')
 #cap = cv2.VideoCapture('sonar.mp4')
 cap = cv2.VideoCapture('veinte.mp4')
+cap = cv2.VideoCapture(-1)
 fgbg = cv2.createBackgroundSubtractorMOG2()
 while(1):
     ret, frame = cap.read()
