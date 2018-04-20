@@ -1,6 +1,6 @@
 import numpy as np
-
-
+import cv2
+import random
 def calculo_epsilon(ux, uy, wx, wy, dx, dy, img_i, img_j):
 
     """
@@ -19,10 +19,10 @@ def calculo_epsilon(ux, uy, wx, wy, dx, dy, img_i, img_j):
     suma = 0
     for x in range(ux - wx, ux + wx):
         for y in range(uy - wy, uy + wy):
-            nva_x = x if x < img_i.shape[0] else img_i.shape[0] - 1
-            nva_y = y if y < img_i.shape[1] else img_i.shape[1] - 1
-            xdx = x + dx if x + dx < img_i.shape[0] else img_i.shape[0] - 1
-            ydx = y + dy if y + dy < img_i.shape[1] else img_i.shape[1] - 1
+            nva_x = x if x < img_i.shape[0] else 0
+            nva_y = y if y < img_i.shape[1] else 0
+            xdx = x + dx if x + dx < img_i.shape[0] else 0
+            ydx = y + dy if y + dy < img_i.shape[1] else 0
             suma += np.power(img_i[nva_x][nva_y] - img_j[xdx][ydx], 2)
     return suma
 
@@ -87,7 +87,8 @@ def calcula_imagen_resultante(img_i, img_j, wx=2, wy=2, minimizar=False):
     img_resultante = np.zeros(img_i.shape)
     campo_vectorial = np.zeros((img_i.shape[0], img_i.shape[1], 3))
     for x in range(img_i.shape[0]-1):
-        print("Voy en la x" + str(x))
+        if x % 50 == 0:
+            print("Voy en la x" + str(x))
         for y in range(img_i.shape[1]-1):
             if minimizar:
                 val = minimaliza_epsilon(x, y, wx, wy, img_i, img_j)
@@ -95,11 +96,34 @@ def calcula_imagen_resultante(img_i, img_j, wx=2, wy=2, minimizar=False):
                 campo_vectorial[x][y] = (val[1], val[2], 1)
             else:
                 # Se fijan los valores de dx y dy en 1
-                val = calculo_epsilon(x, y, wx, wy, 1, 1, img_i, img_j)
+                val = calculo_epsilon(x, y, wx, wy, 20, 20, img_i, img_j)
                 img_resultante[x][y] = val
     return img_resultante, campo_vectorial
 
 
+def dibuja_campo_vectorial(campo_vectorial):
+    """
+    Función que dibuja el campo vectorial
+    :param campo_vectorial: El campo vectorial a dibujar
+    :return: La imagen con el campo vectorial
+    """
+    imagen = np.zeros(campo_vectorial.shape)
+    for x in range(len(campo_vectorial)):
+        for y in range(len(campo_vectorial[x])):
+            # Para blanco y negro
+            """
+                        arr = [0,255]
+                        idx = 0 if random.randint(0,1) % 2 == 0 else 1
+                        imagen = cv2.arrowedLine(imagen, (x, y), (x + int(campo_vectorial[x][y][0]),
+                                                                  y + int(campo_vectorial[x][y][1])),
+                                                 (arr[idx], arr[idx], arr[idx]), 3)
+                        """
+            # Para color
+            imagen = cv2.arrowedLine(imagen, (x, y), (x + int(campo_vectorial[x][y][0]),
+                                                      y + int(campo_vectorial[x][y][1])),
+                                     (random.randint(0, 254), random.randint(0, 254), random.randint(0, 254)), 3)
+
+    return imagen
 
 
 
