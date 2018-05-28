@@ -9,14 +9,17 @@ Keys:
 Keys:
     ESC    - exit
 '''
-
+# Basado en https://github.com/opencv/opencv/blob/master/samples/python/opt_flow.py
 # Python 2/3 compatibility
 from __future__ import print_function
 
 import numpy as np
 import cv2 as cv
 import video
-
+import os
+import errno
+# Para crear directorios, por el momento nosotros los creamos así que no hay la necesidad de
+# https://stackoverflow.com/questions/12517451/automatically-creating-directories-with-file-output
 np.set_printoptions(threshold=np.nan)
 
 def draw_flow(img, flow, step=16):
@@ -44,15 +47,6 @@ def draw_hsv(flow):
     bgr = cv.cvtColor(hsv, cv.COLOR_HSV2BGR)
     return bgr
 
-
-def warp_flow(img, flow):
-    h, w = flow.shape[:2]
-    flow = -flow
-    flow[:,:,0] += np.arange(w)
-    flow[:,:,1] += np.arange(h)[:,np.newaxis]
-    res = cv.remap(img, flow, None, cv.INTER_LINEAR)
-    return res
-
 if __name__ == '__main__':
     import sys
     print(__doc__)
@@ -62,21 +56,32 @@ if __name__ == '__main__':
     show_hsv = True
     idx = 0
     flow_ant = np.zeros((234, 320, 2))
+
+
     while True:
         ret, img = cam.read()
         if img is None:
             break
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
         flow = cv.calcOpticalFlowFarneback(prevgray, gray, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+        mag, ang = cv.cartToPolar(flow[..., 0], flow[..., 1])
+        arr1 = ang * 180 / np.pi / 2
+        arr2 = cv.normalize(mag, None, 0, 1000, cv.NORM_MINMAX)
         flow_ant = flow
         #np.save('archivonumpy'+str(idx),flow)
         prevgray = gray
-        with open('archivo'+str(idx)+'idx', 'w') as outfile:
-            outfile.write('# Array shape: {0}\n'.format(flow.shape))
-            for data_slice in flow:
-                np.savetxt(outfile, data_slice, fmt='%-7.2f')
-                outfile.write('# New slice\n')
-        print(str(idx) +"-  "+ str((flow > 1).sum()))
+        np.savetxt("magnitudes"+str(idx)+".txt", arr2)
+        np.save("magnitudes"+str(idx), arr2)
+        np.savetxt("angulos"+str(idx)+".txt", arr1)
+        np.save("angulos"+str(idx), arr1)
+        #with open('archivo'+str(idx)+'idx', 'w') as outfile:
+        #
+        #    outfile.write('# Array shape: {0}\n'.format(flow.shape))
+        #
+        #    for data_slice in flow:
+         #       np.savetxt(outfile, data_slice, fmt='%-7.2f')
+          #      outfile.write('# New slice\n')
+        #print(str(idx) +"-  "+ str((flow > 1).sum()))
         #print(flow)
         #cv.imwrite('flow'+str(idx)+".png", draw_flow(gray, flow))
         #if show_hsv:
