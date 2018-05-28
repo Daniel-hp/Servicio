@@ -1,0 +1,1 @@
+Se observa que no se detecta movimiento si la magnitud es menor a 1, además la segunda coordenada que devuelve es el ángulo de rotación que tuvo dicho movimiento
