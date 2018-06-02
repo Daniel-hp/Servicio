@@ -18,6 +18,7 @@ import cv2 as cv
 import video
 import os
 import errno
+import sys
 # Para crear directorios, por el momento nosotros los creamos así que no hay la necesidad de
 # https://stackoverflow.com/questions/12517451/automatically-creating-directories-with-file-output
 np.set_printoptions(threshold=np.nan)
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     cam = video.create_capture("veinte.mp4")
     ret, prev = cam.read()
     prevgray = cv.cvtColor(prev, cv.COLOR_BGR2GRAY)
-    show_hsv = True
+    pw_hsv = True
     idx = 0
     flow_ant = np.zeros((234, 320, 2))
 
@@ -70,10 +71,11 @@ if __name__ == '__main__':
         flow_ant = flow
         #np.save('archivonumpy'+str(idx),flow)
         prevgray = gray
-        np.savetxt("magnitudes"+str(idx)+".txt", arr2)
-        np.save("magnitudes"+str(idx), arr2)
-        np.savetxt("angulos"+str(idx)+".txt", arr1)
-        np.save("angulos"+str(idx), arr1)
+       # np.savetxt("magnitudes"+str(idx)+".txt", arr2)
+       # np.save("magnitudes"+str(idx), arr2)
+       # np.savetxt("angulos"+str(idx)+".txt", arr1)
+       # np.save("angulos"+str(idx), arr1)
+        draw_hsv(flow)
         #with open('archivo'+str(idx)+'idx', 'w') as outfile:
         #
         #    outfile.write('# Array shape: {0}\n'.format(flow.shape))
@@ -92,6 +94,7 @@ if __name__ == '__main__':
             break
         if ch == ord('1'):
             show_hsv = not show_hsv
-            print('HSV flow visualization is', ['off', 'on'][show_hsv])
+            revgray = cv.cvtColor(prev, cv.COLOR_BGR2GRAY)
+    shoprint('HSV flow visualization is', ['off', 'on'][show_hsv])
 
     cv.destroyAllWindows()

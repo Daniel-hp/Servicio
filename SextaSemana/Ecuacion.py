@@ -29,9 +29,11 @@ def normalizar(arr):
             nvoarr[x][y] = int((arr[x][y] * maxi) / maximo)
     return nvoarr
 
-def sumas(ux, uy, wx, wy, img_i, img_j):
+def minimizacion_epsilon(ux, uy, wx, wy, img_i, img_j):
     suma = 0
-    arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    # Situación ideal donde dx <= wx, donde el punto en la imagen j se encuentra dentro de la ventana de integración
+    vals_dx = np.arange(-wx, wx + 1)
+    vals_dy = np.arange(-wy, wy + 1)
     idx_i = 0
     idx_j = 0
     contador = 0
@@ -42,7 +44,7 @@ def sumas(ux, uy, wx, wy, img_i, img_j):
         for y in range(uy - wy, uy + wy):
             nva_x = x if x < img1.shape[0] else img1.shape[0] - 1
             nva_y = y if y < img1.shape[1] else img1.shape[1] - 1
-            res = menor(nva_x, nva_y, arr, arr, img_i, img_j)
+            res = menor_dx_dy(nva_x, nva_y, vals_dx, vals_dy, img_i, img_j)
             suma += res[0]
             #suma += np.power(img_i[nva_x][nva_y] - img_j[xdx][ydy], 2)
             #campo_vectorial[idx_i][idx_j] = (res[1], res[2], 0 if random.randint(0,1) % 2 == 0 else 1)
@@ -54,7 +56,7 @@ def sumas(ux, uy, wx, wy, img_i, img_j):
     return suma, int(suma_dx / contador), int(suma_dy / contador)
 
 
-def menor(x, y, dx, dy, img_i, img_j):
+def menor_dx_dy(x, y, dx, dy, img_i, img_j):
     valor = np.inf
     dx_menor = 0
     dy_menor = 0
@@ -75,7 +77,7 @@ def hazFuncion(iteracion):
     for x in range(img1.shape[0]-1):
         #print( "Voy en la x : " + str(x))
         for y in range(img1.shape[1]-1):
-            val = sumas(x, y, 1, 1, img1_0, img2_0)
+            val = minimizacion_epsilon(x, y, 1, 1, img1_0, img2_0)
             img3[x][y] = val[0]
             campo_vectorial[x][y] = (val[1], val[2],  0 if random.randint(0,1) % 2 == 0 else 1)
         #    img4[x][y] = sumas(x, y, 20, 20, img1_1, img2_1)
@@ -86,15 +88,12 @@ for x in range(iter):
     # img4 = np.zeros(img2_1.shape, dtype="uint32")
     # img5 = np.zeros(img2_2.shape, dtype="uint32")
     hazFuncion(x)
-    for x in range(len(campo_vectorial)):
-        for y in range(len(campo_vectorial[x])):
-            img1_0 = cv2.line(img1_0, (x, y), (x + int(campo_vectorial[x][y][0]),
-                    y + int(campo_vectorial[x][y][1])), (random.randint(0,255), random.randint(0,255), random.randint(0, 255)), 1)
-    cv2.namedWindow(str(x) + "0.jpg", cv2.WINDOW_NORMAL)
-    cv2.imshow(str(x) + "0.jpg", img1_0)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-'''
+    #for x in range(len(campo_vectorial)):
+    #    for y in range(len(campo_vectorial[x])):
+    #        img1_0 = cv2.line(img1_0, (x, y), (x + int(campo_vectorial[x][y][0]),
+    #                y + int(campo_vectorial[x][y][1])), (random.randint(0,255), random.randint(0,255), random.randint(0, 255)), 1)
+
+
     img3 = np.copy(normalizar(img3))
     print("???" + str(x))
     if x % 10 == 0:
@@ -107,7 +106,6 @@ for x in range(iter):
        # cv2.imshow(str(x) + "2.jpg", img5)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-'''
 
 
 
