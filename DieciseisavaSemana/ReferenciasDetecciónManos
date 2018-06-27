@@ -1,0 +1,31 @@
+(234, 320, 3) -> imagen original
+
+(234, 320) -> imagen tras aplicarle flujo óptico
+
+
+
+
+http://www.robots.ox.ac.uk/~vgg/data/hands/ -> dataset de manos, donde se indica con un rectángulo las manos
+
+https://www.quora.com/Whats-the-best-neural-network-architecture-to-process-video (cómo usar una red convolucional, viene vídeo explicando y eso)
+
+
+revisar : 
+
+https://github.com/Kaushikpatnaik/Spatio-Temporal-Feature-Learning-for-Sign-Language-using-3D-Convolutional-Networks
+
+
+https://www.quora.com/What-is-the-best-convolutional-neural-network-CNN-tutorial-with-visualization
+
+
+VEr cómo usar tensorflow (igual y no es necesario, ver lo de abajo)
+
+
+https://deepnotes.io/intro (cómo podemos implementar nuestra CNN)
+
+bibliotecas de RN
+
+https://datascience.stackexchange.com/questions/694/best-python-library-for-neural-networks
+
+
+igual y hacer cosas raras con lo de CIFAR-10
